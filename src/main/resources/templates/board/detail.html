@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시글 상세</title>
+<script th:src="@{/public/js/board/detail.js}" defer="defer" ></script>
+</head>
+<body>
+	<header th:insert="/headerNav"></header>
+	<main class="container">
+		<h1 class="m-3">
+			<small th:text="${board.board_no}"></small>.
+			<span th:text="${board.title}"></span>
+		</h1>
+		<p th:text="${boardPrefer}"></p>
+		<p>
+			글쓴이 아이디 :<strong th:text="${board.user.user_id}"></strong> ,
+			이름 :<strong th:text="${board.user.name}"></strong>
+		</p>
+		<p>
+			글쓴이 이메일 :<strong th:text="${board.user.email}"></strong> ,
+			생일 :<strong th:text="${#dates.format(board.user.birth,'yyyy-MM-dd')}"></strong>
+		</p>
+		<p>
+			게시일 : <span th:text="${board.post_time}"></span>
+		</p>
+		<div class="mb-3 d-flex justify-content-between">
+			<div>				
+					<a 
+				 	data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요!"
+					th:href="@{/board/prefer/{no}/{prefer}(no=${board.board_no},prefer=${true})}" 
+					class="btn btn-outline-primary rounded-pill">
+						<i th:classappend="${(board.prefer_active!=null&&board.prefer_active)?'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up'}" class="bi "></i>				
+						<span th:text="${board.good}"></span>
+					</a> /
+					<a 
+				 	data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="싫어요!"
+					th:href="@{/board/prefer/{no}/{prefer}(no=${board.board_no},prefer=${false})}"  
+					class="btn btn-outline-danger rounded-pill">
+						<i th:classappend="${(board.prefer_active!=null&&!board.prefer_active)?'bi-hand-thumbs-down-fill':'bi-hand-thumbs-down'}" class="bi "></i>				
+						 <span th:text="${board.bad}"></span>
+					</a>
+				</th:block>
+				/
+				<i class="bi bi-eye" 
+				data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="조회수"
+				>
+					<span th:text="${board.views}"></span>
+				</i>				
+			</div>
+			<div th:if="${session.loginUser?.user_id==board.user.user_id}">
+				<a th:href="@{/board/update/{no}(no=${board.board_no})}" class="btn btn-success">
+					수정
+				</a>
+			</div>
+		</div>
+		<div>
+			<th:block th:each="boardImg : ${board.boardImgs}">
+				<img th:src="@{/public/img/{fileName}(fileName=${boardImg.img_path})}"
+				class="img-thumbnail" width="200" alt="게시글 이미지">
+			
+			</th:block>
+		</div>
+		
+		<div class="form-floating">
+		  <textarea class="form-control" placeholder="Leave a comment here" 
+		  style="height: 100px; resize: none; " th:text="${board.contents}" readonly></textarea>
+		</div>
+		<div class="m-3">
+		
+			<h2 class="d-flex justify-content-between">
+				<span>댓글 리스트
+					<small th:text="${board.replys?.size}"></small>  
+				</span>
+				<button  class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#replyCollapse">
+					토글
+				</button> 
+			</h2>
+			<div id="replyCollapse" class="list-group collapse show ">
+				<div class="list-group-item text-bg-light border-success" 
+					th:if="${session.loginUser!=null}">
+	<!--///////////////////////////////////// 리플 등록 폼 ///////////////////////////////////////////////////////////////// -->				
+					<form action="/reply/insert.do" method="post" enctype="multipart/form-data">
+						<p class="input-group input-group-sm mb-1">
+							<span class="input-group-text">글쓴이</span>
+							<input name="user.user_id" th:value="${session.loginUser?.user_id}" 
+								type="text" class="form-control">
+						</p>
+						<p class="input-group input-group-sm mb-1">
+							<span class="input-group-text">제목</span>
+							<input name="title"type="text" class="form-control">
+						</p>
+						<p class="input-group input-group-sm mb-1">
+							<span class="input-group-text">사진</span>
+							<input name="imgFile"type="file" class="form-control">
+						</p>
+						<p class="input-group input-group-sm mb-1">
+							<span class="input-group-text">내용</span>
+							<textarea name="contents" class="form-control"></textarea>
+						</p>
+						<p class="mb-1">
+							<button type="reset" class="btn btn-sm btn-outline-warning">초기화</button>
+							<button type="submit" class="btn btn-sm btn-outline-primary">제출</button>
+							<input type="hidden" name="board_no" th:value="${board.board_no}">
+						</p>
+					</form>
+				</div>
+				<div th:insert="/board/replyList" th:with="replys=${board.replys}" id="replyList">
+				</div>
+			</div>
+		</div>
+		
+	</main>
+<script>
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+//replyCollapse
+/* const bsCollapse = new bootstrap.Collapse('#replyCollapse');
+bsCollapse.show(); */
+
+</script>	
+	
+</body>
+</html>
