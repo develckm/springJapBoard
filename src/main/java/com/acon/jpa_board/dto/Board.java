@@ -11,9 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Formula;
+
 import lombok.Data;
 
 /*
+*BOARD_SPRING.BOARD
 +-----------+--------------+------+-----+-------------------+-------------------+
 | Field     | Type         | Null | Key | Default           | Extra             |
 +-----------+--------------+------+-----+-------------------+-------------------+
@@ -25,7 +28,18 @@ import lombok.Data;
 | good      | int          | NO   |     | 0                 |                   |
 | bad       | int          | NO   |     | 0                 |                   |
 | views     | int          | NO   |     | 0                 |                   |
-+-----------+--------------+------+-----+-------------------+-------------------+*/
++-----------+--------------+------+-----+-------------------+-------------------+
+*BOARD_SPRING.BOARD_PREFER
++-----------------+--------------+------+-----+---------+----------------+
+| Field           | Type         | Null | Key | Default | Extra          |
++-----------------+--------------+------+-----+---------+----------------+
+| board_prefer_no | int          | NO   | PRI | NULL    | auto_increment |
+| board_no        | int          | NO   | MUL | NULL    |                |
+| prefer          | tinyint(1)   | YES  |     | NULL    |                |
+| user_id         | varchar(255) | NO   | MUL | NULL    |                |
++-----------------+--------------+------+-----+---------+----------------+
+*
+*/
 @Entity
 @Data
 public class Board {
@@ -45,11 +59,15 @@ public class Board {
 	@OneToMany //보드 1개에 여러개의 댓글을 작성
 	@JoinColumn(name = "board_no",insertable = false,updatable = false)
 	private List<Reply> replies;
-	
-	
-	
+	@Formula("(SELECT COUNT(*) FROM BOARD_PREFER p WHERE p.prefer=true AND p.board_no=board_no)")
 	private int good;     
+	@Formula("(SELECT COUNT(*) FROM BOARD_PREFER p WHERE p.prefer=false AND p.board_no=board_no)")
 	private int bad;    
+	
+	//@Formula("(SELECT prefer FROM BOARD_PREFER p WHERE p.user_id=loginUserId AND p.board_no=board_no)")
+	//private int prefer_active;    
+
+	
 	private int views;    
 }
 

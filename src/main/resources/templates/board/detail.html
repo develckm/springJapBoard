@@ -25,22 +25,13 @@
 			게시일 : <span th:text="${board.post_time}"></span>
 		</p>
 		<div class="mb-3 d-flex justify-content-between">
-			<div>				
-					<a 
-				 	data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요!"
-					th:href="@{/board/prefer/{no}/{prefer}(no=${board.board_no},prefer=${true})}" 
-					class="btn btn-outline-primary rounded-pill">
-						<i th:classappend="${(board.prefer_active!=null&&board.prefer_active)?'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up'}" class="bi "></i>				
-						<span th:text="${board.good}"></span>
-					</a> /
-					<a 
-				 	data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="싫어요!"
-					th:href="@{/board/prefer/{no}/{prefer}(no=${board.board_no},prefer=${false})}"  
-					class="btn btn-outline-danger rounded-pill">
-						<i th:classappend="${(board.prefer_active!=null&&!board.prefer_active)?'bi-hand-thumbs-down-fill':'bi-hand-thumbs-down'}" class="bi "></i>				
-						 <span th:text="${board.bad}"></span>
-					</a>
-				</th:block>
+			<div>
+				<a class="btn btn-outline-primary rounded-pill bi bi-hand-thumbs-up" 
+					href="#" th:text="${board.good}"></a>				
+				/
+				<a class="btn btn-outline-danger rounded-pill bi bi-hand-thumbs-down" 
+					href="#" th:text="${board.bad}"></a>				
+				
 				/
 				<i class="bi bi-eye" 
 				data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="조회수"
@@ -55,12 +46,11 @@
 			</div>
 		</div>
 		<div>
-			<th:block th:each="boardImg : ${board.boardImgs}">
+			<!-- <th:block th:each="boardImg : ${board.boardImgs}">
 				<img th:src="@{/public/img/{fileName}(fileName=${boardImg.img_path})}"
 				class="img-thumbnail" width="200" alt="게시글 이미지">
-			
-			</th:block>
-		</div>
+			</th:block> -->	
+			</div>
 		
 		<div class="form-floating">
 		  <textarea class="form-control" placeholder="Leave a comment here" 
@@ -70,16 +60,14 @@
 		
 			<h2 class="d-flex justify-content-between">
 				<span>댓글 리스트
-					<small th:text="${board.replys?.size}"></small>  
+					<small th:text="${board.replies?.size}"></small>  
 				</span>
-				<button  class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#replyCollapse">
+				<button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#replyCollapse">
 					토글
 				</button> 
 			</h2>
-			<div id="replyCollapse" class="list-group collapse show ">
-				<div class="list-group-item text-bg-light border-success" 
-					th:if="${session.loginUser!=null}">
-	<!--///////////////////////////////////// 리플 등록 폼 ///////////////////////////////////////////////////////////////// -->				
+			<div id="replyCollapse" class="collapse show">
 					<form action="/reply/insert.do" method="post" enctype="multipart/form-data">
 						<p class="input-group input-group-sm mb-1">
 							<span class="input-group-text">글쓴이</span>
@@ -104,10 +92,9 @@
 							<input type="hidden" name="board_no" th:value="${board.board_no}">
 						</p>
 					</form>
-				</div>
-				<div th:insert="/board/replyList" th:with="replys=${board.replys}" id="replyList">
-				</div>
+				<th:block th:insert="/board/replyList">	
 			</div>
+			
 		</div>
 		
 	</main>
