@@ -32,14 +32,14 @@
 			</thead>
 			<tbody>
 				<tr th:each="user:${users}">
-					<td th:text="${user.user_id}"></td>
+					<td th:text="${user.userId}"></td>
 					<td th:text="${user.name}"></td>
 					<td th:text="${user.phone}"></td>
 					<td th:text="${user.email}"></td>
 					<td th:text="${#dates.year(#dates.createNow())} - ${#dates.year(user.birth)}"></td>
 					<td th:text="${#dates.format(user.signup,'yyyy-MM-dd')}"></td>
 					<td>
-						<a th:href="@{/user/detail/{user_id}(user_id=${user.user_id})}">
+						<a th:href="@{/user/detail/{userId}(userId=${user.userId})}">
 							상세보기
 						</a>
 					</td>

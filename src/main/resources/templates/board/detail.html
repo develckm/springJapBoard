@@ -9,12 +9,12 @@
 	<header th:insert="/headerNav"></header>
 	<main class="container">
 		<h1 class="m-3">
-			<small th:text="${board.board_no}"></small>.
+			<small th:text="${board.boardNo}"></small>.
 			<span th:text="${board.title}"></span>
 		</h1>
 		<p th:text="${boardPrefer}"></p>
 		<p>
-			글쓴이 아이디 :<strong th:text="${board.user.user_id}"></strong> ,
+			글쓴이 아이디 :<strong th:text="${board.user.userId}"></strong> ,
 			이름 :<strong th:text="${board.user.name}"></strong>
 		</p>
 		<p>
@@ -22,7 +22,7 @@
 			생일 :<strong th:text="${#dates.format(board.user.birth,'yyyy-MM-dd')}"></strong>
 		</p>
 		<p>
-			게시일 : <span th:text="${board.post_time}"></span>
+			게시일 : <span th:text="${board.postTime}"></span>
 		</p>
 		<div class="mb-3 d-flex justify-content-between">
 			<div>
@@ -39,15 +39,15 @@
 					<span th:text="${board.views}"></span>
 				</i>				
 			</div>
-			<div th:if="${session.loginUser?.user_id==board.user.user_id}">
-				<a th:href="@{/board/update/{no}(no=${board.board_no})}" class="btn btn-success">
+			<div th:if="${session.loginUser?.userId==board.user.userId}">
+				<a th:href="@{/board/update/{no}(no=${board.boardNo})}" class="btn btn-success">
 					수정
 				</a>
 			</div>
 		</div>
 		<div>
 			<!-- <th:block th:each="boardImg : ${board.boardImgs}">
-				<img th:src="@{/public/img/{fileName}(fileName=${boardImg.img_path})}"
+				<img th:src="@{/public/img/{fileName}(fileName=${boardImg.imgPath})}"
 				class="img-thumbnail" width="200" alt="게시글 이미지">
 			</th:block> -->	
 			</div>
@@ -71,7 +71,7 @@
 					<form action="/reply/insert.do" method="post" enctype="multipart/form-data">
 						<p class="input-group input-group-sm mb-1">
 							<span class="input-group-text">글쓴이</span>
-							<input name="user.user_id" th:value="${session.loginUser?.user_id}" 
+							<input name="user.userId" th:value="${session.loginUser?.userId}" 
 								type="text" class="form-control">
 						</p>
 						<p class="input-group input-group-sm mb-1">
@@ -89,7 +89,7 @@
 						<p class="mb-1">
 							<button type="reset" class="btn btn-sm btn-outline-warning">초기화</button>
 							<button type="submit" class="btn btn-sm btn-outline-primary">제출</button>
-							<input type="hidden" name="board_no" th:value="${board.board_no}">
+							<input type="hidden" name="boardNo" th:value="${board.boardNo}">
 						</p>
 					</form>
 				<th:block th:insert="/board/replyList">	

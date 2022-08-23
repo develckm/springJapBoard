@@ -16,15 +16,15 @@ import lombok.Data;
 +-----------+--------------+------+-----+-------------------+-------------------+
 | Field     | Type         | Null | Key | Default           | Extra             |
 +-----------+--------------+------+-----+-------------------+-------------------+
-| reply_no  | int          | NO   | PRI | NULL              | auto_increment    |
+| replyNo  | int          | NO   | PRI | NULL              | auto_increment    |
 | title     | varchar(255) | NO   |     | NULL              |                   |
 | contents  | varchar(255) | YES  |     |                   |                   |
-| post_time | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-| img_path  | varchar(255) | YES  |     | NULL              |                   |
+| postTime | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+| imgPath  | varchar(255) | YES  |     | NULL              |                   |
 | good      | int          | NO   |     | 0                 |                   |
 | bad       | int          | NO   |     | 0                 |                   |
-| board_no  | int          | NO   | MUL | NULL              |                   |
-| user_id   | varchar(255) | NO   | MUL | NULL              |                   |
+| boardNo  | int          | NO   | MUL | NULL              |                   |
+| userId   | varchar(255) | NO   | MUL | NULL              |                   |
 +-----------+--------------+------+-----+-------------------+-------------------+
  *BOARD_SPRING.REPLY_PREFER
 +-----------------+--------------+------+-----+---------+----------------+
@@ -32,8 +32,8 @@ import lombok.Data;
 +-----------------+--------------+------+-----+---------+----------------+
 | reply_prefer_no | int          | NO   | PRI | NULL    | auto_increment |
 | prefer          | tinyint(1)   | YES  |     | NULL    |                |
-| reply_no        | int          | NO   | MUL | NULL    |                |
-| user_id         | varchar(255) | NO   | MUL | NULL    |                |
+| replyNo        | int          | NO   | MUL | NULL    |                |
+| userId         | varchar(255) | NO   | MUL | NULL    |                |
 +-----------------+--------------+------+-----+---------+----------------+
  * */
 @Entity
@@ -41,16 +41,21 @@ import lombok.Data;
 public class Reply {
 	@Id
 	@GeneratedValue
-	private int reply_no;  
+	@Column(name = "reply_no")
+	private int replyNo;  
 	private String title;     
-	private String contents;  
-	private Date post_time;
-	private String img_path;
+	private String contents; 
+	@Column(name = "post_time")
+	private Date postTime;
+	@Column(name = "img_path")
+	private String imgPath;
 	//@Formula : 해당 필드를 실제 db 칼럼이 아니라 서브쿼리로 불러오는 것으로 인지하게 됨
 	@Formula("(SELECT COUNT(*) FROM REPLY_PREFER p WHERE p.prefer=true AND p.reply_no=reply_no )")
 	private int good;      
 	@Formula("(SELECT COUNT(*) FROM REPLY_PREFER p WHERE p.prefer=false AND p.reply_no=reply_no )")
-	private int bad;      
-	private int board_no;
-	private String user_id;   
+	private int bad;
+	@Column(name = "board_no")
+	private int boardNo;
+	@Column(name = "user_id")
+	private String userId;   
 }

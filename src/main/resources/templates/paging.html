@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<nav aria-label="Page navigation example">
+	  <ul class="pagination">
+	  	<li class="page-item">
+	      <a class="page-link" th:href="@{./1}" aria-label="First">
+	        <span aria-hidden="true">First</span>
+	      </a>
+	    </li>
+	    <li class="page-item" th:classappend="${(!hasPrevious)?'disabled':''}">
+	      <a class="page-link" th:href="@{./{page}(page=${page-1})}" aria-label="Previous">
+	        <span aria-hidden="true">&laquo;</span>
+	      </a>
+	    </li>
+	    <th:block th:each="n:${#numbers.sequence(startPage,endPage)}">
+		    <li class="page-item">
+		    	<a class="page-link" 
+		    	th:classappend="${(page==n)?'active':''}"
+		    	th:href="@{./{page}(page=${n})}" th:text="${n}"></a>
+		    </li>
+	    </th:block>
+	    <li class="page-item" th:classappend="${(!hasNext)?'disabled':''}">
+	      <a class="page-link" th:href="@{./{page}(page=${page+1})}" aria-label="Next">
+	        <span aria-hidden="true">&raquo;</span>
+	      </a>
+	    </li>
+	   	<li class="page-item">
+	      <a class="page-link" th:href="@{./{page}(page=${lastPage})}" aria-label="Last">
+	        <span aria-hidden="true">Last</span>
+	      </a>
+	    </li>
+	  </ul>
+	</nav>
+</html>

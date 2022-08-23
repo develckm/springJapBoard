@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,15 +27,16 @@ public class BoardController {
 			@PathVariable int page,
 			Model model) {
 		
-		int pageSize=7;
-		Pageable pageable=PageRequest.of(page-1, pageSize);
+		int pageSize=5;
+		//Pageable pageable=PageRequest.of(page-1, pageSize);
+		Pageable pageable=PageRequest.of(page-1, pageSize, Sort.by("boardNo").descending());
 		Page<Board> boardList=boardRepository.findAll(pageable); //Page는 List에 page와 관련되 필드가 추가된 객체
 		System.out.println(boardList.getNumber());//현제 페이지 
 		System.out.println(boardList.getTotalPages());//전체 페이지 수
 		System.out.println(boardList.getTotalElements());//전체 수
 		System.out.println(boardList.hasNext()); //다음 페이지가 있나?
 		System.out.println(boardList.hasPrevious()); //이전 페이지가 있나?
-
+		model.addAttribute("url", "/board/list/");
 		model.addAttribute("boardList", boardList);
 		return "/board/list";
 	}

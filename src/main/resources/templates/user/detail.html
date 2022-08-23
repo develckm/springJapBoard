@@ -12,10 +12,10 @@
 			<div class="row mb-3 g-3 align-items-center">
 				<div class="col-auto">
 					아이디
-					<input name="user_id" type="hidden" th:value="${user.user_id}">
+					<input name="userId" type="hidden" th:value="${user.userId}">
 				</div>	
 				<div class="col-auto">
-					<strong th:text="${user.user_id}"></strong>	
+					<strong th:text="${user.userId}"></strong>	
 				</div>	
 			</div>
 			
@@ -91,7 +91,7 @@
 			  </div>
 			  <div class="col-auto">
 			    <input type="datetime-local" name="signup" id="inputSignup" class="form-control" 
-			    th:value="${#dates.format(user.signup,'yyyy-MM-dd''T''HH:mm:ss')}"  readonly>
+			    th:value="${#dates.format(user.signup,'yyyy-MM-dd''T''HH:mm:ss')}">
 			  </div>
 			</div>
 			<div class="row mb-3 g-3 align-items-center">
@@ -106,7 +106,7 @@
 					  	<th:block th:if=${board!=null}>
 						   	<div class="ms-2 me-auto">
 					      		<div>
-					      			<span th:text="${board.board_no}"></span>.
+					      			<span th:text="${board.boardNo}"></span>.
 					      			<span class="fw-bold" th:text="${board.title}"></span>
 					      		</div>
 						     	<div th:text="${board.contents}"></div>
@@ -133,8 +133,8 @@
 					   	<div class="ms-2 me-auto">
 					   		
 				      		<div>
-				      			<span th:text="${reply.board_no}"></span>.
-				      			<span th:text="${reply.reply_no}"></span>.
+				      			<span th:text="${reply.boardNo}"></span>.
+				      			<span th:text="${reply.replyNo}"></span>.
 				      			<span class="fw-bold" th:text="${reply.title}"></span>
 				      		</div>
 					     	<div th:text="${reply.contents}"></div>
@@ -159,11 +159,11 @@
 					<button type="submit" class="btn btn-primary">제출</button>
 				</div>	
 				<div class="col-auto">
-					<a th:href="@{/user/delete/{user_id}(user_id=${user.user_id})}" 
+					<a th:href="@{/user/delete/{userId}(userId=${user.userId})}" 
 						class="btn btn-danger">삭제</a>
 				
 					<!-- <button type="button" class="btn btn-danger"
-						th:onclick="location.href='/user/delete/'+[[${user.user_id}]]"
+						th:onclick="location.href='/user/delete/'+[[${user.userId}]]"
 					>삭제</button> -->
 				</div>					
 			</div>

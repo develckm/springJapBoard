@@ -3,6 +3,7 @@ package com.acon.jpa_board.dto;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,11 +21,11 @@ import lombok.Data;
 +-----------+--------------+------+-----+-------------------+-------------------+
 | Field     | Type         | Null | Key | Default           | Extra             |
 +-----------+--------------+------+-----+-------------------+-------------------+
-| board_no  | int          | NO   | PRI | NULL              | auto_increment    |
+| boardNo  | int          | NO   | PRI | NULL              | auto_increment    |
 | title     | varchar(255) | NO   |     | NULL              |                   |
 | contents  | varchar(255) | YES  |     |                   |                   |
-| post_time | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-| user_id   | varchar(255) | NO   | MUL | NULL              |                   |
+| postTime | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+| userId   | varchar(255) | NO   | MUL | NULL              |                   |
 | good      | int          | NO   |     | 0                 |                   |
 | bad       | int          | NO   |     | 0                 |                   |
 | views     | int          | NO   |     | 0                 |                   |
@@ -34,23 +35,27 @@ import lombok.Data;
 | Field           | Type         | Null | Key | Default | Extra          |
 +-----------------+--------------+------+-----+---------+----------------+
 | board_prefer_no | int          | NO   | PRI | NULL    | auto_increment |
-| board_no        | int          | NO   | MUL | NULL    |                |
+| boardNo        | int          | NO   | MUL | NULL    |                |
 | prefer          | tinyint(1)   | YES  |     | NULL    |                |
-| user_id         | varchar(255) | NO   | MUL | NULL    |                |
+| userId         | varchar(255) | NO   | MUL | NULL    |                |
 +-----------------+--------------+------+-----+---------+----------------+
 *
 */
 @Entity
 @Data
 public class Board {
+	
+	//dto Entity의 필드명을 _ 를 포함시키면 안된다. jpa _를 필드로 인지 한다. userId == user.id, boardNo==board.no
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO) //auto_increment :insert 시 자동으로 생성되는 pk 
-	private int board_no; 
+	@Column(name="board_no")
+	private int boardNo; 
+	
 	private String title;    
 	private String contents; 
-	private Date post_time;
+	private Date postTime;
 	
-	//private String user_id; //n:1 1:1 join 의 경우는 주체가 되는 테이블에 fk가 존재한다.  
+	//private String userId; //n:1 1:1 join 의 경우는 주체가 되는 테이블에 fk가 존재한다.  
 	//fk가 user 필드 내부에 에 존재한다고 명시해야 한다. 
 	@ManyToOne //유저1명이 여러개의 게시글을 작성
 	@JoinColumn(name = "user_id",insertable = false,updatable = false)
@@ -63,11 +68,6 @@ public class Board {
 	private int good;     
 	@Formula("(SELECT COUNT(*) FROM BOARD_PREFER p WHERE p.prefer=false AND p.board_no=board_no)")
 	private int bad;    
-	
-	//@Formula("(SELECT prefer FROM BOARD_PREFER p WHERE p.user_id=loginUserId AND p.board_no=board_no)")
-	//private int prefer_active;    
-
-	
 	private int views;    
 }
 

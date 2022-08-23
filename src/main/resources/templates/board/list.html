@@ -26,11 +26,11 @@
 			</thead>
 			<tbody>
 				<th:block th:each="board : ${boardList}" >
-					<tr th:onclick="location.href='/board/detail/[[${board.board_no}]]'">
-						<td th:text="${board.board_no}"></td>
-						<td th:text="${board.user?.user_id}"></td>
+					<tr th:onclick="location.href='/board/detail/[[${board.boardNo}]]'">
+						<td th:text="${board.boardNo}"></td>
+						<td th:text="${board.user?.userId}"></td>
 						<td th:text="${board.title}"></td>
-						<td th:text="${#dates.format(board.post_time,'yyyy-MM-dd hh:mm:ss')}"></td>
+						<td th:text="${#dates.format(board.postTime,'yyyy-MM-dd hh:mm:ss')}"></td>
 						<td th:text="${board.views}"></td>
 						<td th:text="${board.good}"></td>
 						<td th:text="${board.bad}"></td>
@@ -39,6 +39,15 @@
 				</th:block>
 			</tbody>
 		</table>
+		<div class="d-flex justify-content-center" 
+			th:insert="/paging"
+			th:with="startPage=${(page-2<1)?1:page-2},
+					 endPage=${(page+2>boardList.totalPages)?boardList.totalPages:page+2},
+					 lastPage=${boardList.totalPages},
+					 hasNext=${boardList.hasNext},
+					 hasPrevious=${boardList.hasPrevious}"
+			>
+		</div>
 	</main>
 	
 	

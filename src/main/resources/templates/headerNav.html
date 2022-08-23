@@ -28,10 +28,10 @@
 	     	
      	</th:block>
      	<th:block th:unless="${session.loginUser==null}">
-     		<a th:href="@{/user/detail/{user_id}(user_id=${session.loginUser.user_id})}" 
+     		<a th:href="@{/user/detail/{userId}(userId=${session.loginUser.userId})}" 
      			class="btn btn-sm btn-outline-secondary">
 				<span th:text="${session.loginUser.name}"></span>
-				(<span th:text="${session.loginUser.user_id}"></span>)
+				(<span th:text="${session.loginUser.userId}"></span>)
 			</a> / 
 			<a href="/user/logout.do" class="btn btn-sm btn-danger">로그아웃</a>
      	</th:block>
