@@ -69,10 +69,5 @@ public class Board {
 	@Formula("(SELECT COUNT(*) FROM BOARD_PREFER p WHERE p.prefer=false AND p.board_no=board_no)")
 	private int bad;    
 	private int views;    
-}
-
-
-
-
-
-
+	
+}	 

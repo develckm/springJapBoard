@@ -1,6 +1,10 @@
 package com.acon.jpa_board.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.acon.jpa_board.dto.User;
@@ -10,5 +14,10 @@ import com.acon.jpa_board.dto.User;
 // JpaRepository : crud용 함수가 명시되어 있다. findAll,findeById,delete,save(insert,update) 
 @Repository
 public interface UserRepository extends JpaRepository<User, String>{
-	
+	List<User >findByName(String name); 
+	//Select * from User where name=:name
+	Optional<User> findOptionalByUserIdAndPw (String userId,String pw); 
+	//Select * from User where userId=:userId And pw=:pw 
+
+
 }

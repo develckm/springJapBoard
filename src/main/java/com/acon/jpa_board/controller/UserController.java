@@ -19,6 +19,7 @@ public class UserController {
 	private UserRepository userRepository;
 	@GetMapping("/insert.do")
 	public void insert() {}
+	
 	@PostMapping("/insert.do")
 	public String insert(User user) {
 		System.out.println(user);
@@ -28,6 +29,8 @@ public class UserController {
 		System.out.println(saveUser);
 		return "redirect:/user/list/1";
 	}
+	
+	
 	@PostMapping("/update.do")
 	public String update(User user) {
 		User saveUser=userRepository.save(user);

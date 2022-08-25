@@ -10,17 +10,206 @@
 		<h1 class="m-3 d-flex justify-content-between align-items-center">게시글 리스트
 			<a href="/board/insert.do" class="btn btn-sm btn-primary">게시글 등록</a>
 		</h1>
+		<nav class="navbar m-3">
+		  <div class="container-fluid justify-content-center">
+		    <form th:action="@{./1}" class="d-flex" role="search">
+		      <select class="form-control me-2" name="field" style="width: 120px">
+		      	<option 
+		      	th:selected="${#strings.equals(param.field,'boardNo')}"
+		      	value="boardNo">글번호</option>
+		      	<option 
+	      		th:selected="${#strings.equals(param.field,'userId')}"
+		      	value="userId">글쓴이</option>
+		      	<option 
+		      	th:selected="${#strings.equals(param.field,'title')}"
+		      	value="title">제목</option>
+		      	<option
+		      	th:selected="${#strings.equals(param.field,'contents')}"
+		      	 value="contents">내용</option>
+		      	<option 
+		      	th:selected="${#strings.equals(param.field,'postTime')}"
+		      	value="postTime">작성일</option>
+		      </select>
+		      <input class="form-control me-2"  size="20"
+		      	th:value="${param.search}" name="search"
+		      	type="search" placeholder="Search" aria-label="Search">
+		      <button class="btn btn-outline-success" type="submit">Search</button>
+		      <input type="hidden" name="sort" th:value="${param.sort}"> 
+		      <input type="hidden" name="direct" th:value="${param.direct}">
+		    </form>
+		  </div>
+		</nav>
 		
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>no</th>
-					<th>글쓴이</th>
-					<th>타이틀</th>
-					<th>등록일</th>
-					<th>조회수</th>
-					<th>good</th>
-					<th>bad</th>
+					<th>
+						<th:block th:if="${#strings.equals(param.sort,'boardNo') || #strings.isEmpty(param.sort)}">
+							<th:block th:if="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down"
+								th:href="@{./1(sort=boardNo,direct=asc,field=${param.field},search=${param.search})}">
+									no
+								</a>
+							</th:block>
+							<th:block th:unless="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down-alt"
+								th:href="@{./1(sort=boardNo,direct=desc,field=${param.field},search=${param.search})}">
+									no
+								</a>
+							
+							</th:block>
+						</th:block>
+						<th:block th:unless="${#strings.equals(param.sort,'boardNo') || #strings.isEmpty(param.sort)}">
+							<a 
+							th:href="@{./1(sort=boardNo,field=${param.field},search=${param.search})}">
+								no
+							</a>
+						</th:block>
+					</th>
+					<th>
+					<!-- url?driect=&sort= : param.sort=="" -->
+					<!-- url?driect= : param.sort==null -->
+
+						<th:block th:if="${#strings.equals(param.sort,'user.userId')}">
+							<th:block th:if="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down"
+								th:href="@{./1(sort=user.userId,direct=asc,field=${param.field},search=${param.search})}">
+									글쓴이
+								</a>
+							</th:block>
+							<th:block th:unless="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down-alt"
+								th:href="@{./1(sort=user.userId,direct=desc,field=${param.field},search=${param.search})}">
+									글쓴이
+								</a>
+							</th:block>
+						</th:block>
+						<th:block th:unless="${#strings.equals(param.sort,'user.userId')}">
+							<a 
+							th:href="@{./1(sort=user.userId,field=${param.field},search=${param.search})}">
+								글쓴이
+							</a>
+						</th:block>
+					</th>
+					<th>
+						<th:block th:if="${#strings.equals(param.sort,'title')}">
+							<th:block th:if="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down"
+								th:href="@{./1(sort=title,direct=asc,field=${param.field},search=${param.search})}">
+									타이틀
+								</a>
+							</th:block>
+							<th:block th:unless="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down-alt"
+								th:href="@{./1(sort=title,direct=desc,field=${param.field},search=${param.search})}">
+									타이틀
+								</a>
+							</th:block>
+						</th:block>
+						<th:block th:unless="${#strings.equals(param.sort,'title')}">
+							<a th:href="@{./1(sort=title,field=${param.field},search=${param.search})}" >
+								타이틀
+							</a>
+						</th:block>
+					</th>
+					<th>
+						<th:block th:if="${#strings.equals(param.sort,'postTime')}">
+							<th:block th:if="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down"
+								th:href="@{./1(sort=postTime,direct=asc,field=${param.field},search=${param.search})}">
+									등록일
+								</a>
+							</th:block>
+							<th:block th:unless="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down-alt"
+								th:href="@{./1(sort=postTime,direct=desc,field=${param.field},search=${param.search})}">
+									등록일
+								</a>
+							</th:block>
+						</th:block>
+						<th:block th:unless="${#strings.equals(param.sort,'postTime')}">
+							<a th:href="@{./1(sort=postTime,field=${param.field},search=${param.search})}" >
+								등록일
+							</a>
+						</th:block>				
+					</th>
+					<th>
+						<th:block th:if="${#strings.equals(param.sort,'views')}">
+							<th:block th:if="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down"
+								th:href="@{./1(sort=views,direct=asc,field=${param.field},search=${param.search})}">
+									조회수
+								</a>
+							</th:block>
+							<th:block th:unless="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down-alt"
+								th:href="@{./1(sort=views,direct=desc,field=${param.field},search=${param.search})}">
+									조회수
+								</a>
+							</th:block>
+						</th:block>
+						<th:block th:unless="${#strings.equals(param.sort,'views')}">
+							<a th:href="@{./1(sort=views,field=${param.field},search=${param.search})}" >
+								조회수
+							</a>
+						</th:block>		
+					</th>
+					<th>
+						<th:block th:if="${#strings.equals(param.sort,'good')}">
+							<th:block th:if="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down"
+								th:href="@{./1(sort=good,direct=asc,field=${param.field},search=${param.search})}">
+									good
+								</a>
+							</th:block>
+							<th:block th:unless="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down-alt"
+								th:href="@{./1(sort=good,direct=desc,field=${param.field},search=${param.search})}">
+									good
+								</a>
+							</th:block>
+						</th:block>
+						<th:block th:unless="${#strings.equals(param.sort,'good')}">
+							<a th:href="@{./1(sort=good,field=${param.field},search=${param.search})}" >
+								good
+							</a>
+						</th:block>							
+					</th>
+					<th>
+						<th:block th:if="${#strings.equals(param.sort,'bad')}">
+							<th:block th:if="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down"
+								th:href="@{./1(sort=bad,direct=asc,field=${param.field},search=${param.search})}">
+									bad
+								</a>
+							</th:block>
+							<th:block th:unless="${#strings.equals(param.direct,'desc') || #strings.isEmpty(param.direct)}">
+								<a 
+								class="bi bi-sort-down-alt"
+								th:href="@{./1(sort=bad,direct=desc,field=${param.field},search=${param.search})}">
+									bad
+								</a>
+							</th:block>
+						</th:block>
+						<th:block th:unless="${#strings.equals(param.sort,'bad')}">
+							<a th:href="@{./1(sort=bad,field=${param.field},search=${param.search})}" >
+								bad
+							</a>
+						</th:block>							
+					</th>
 					<!-- <th>댓글수</th> -->
 				</tr>
 			</thead>
