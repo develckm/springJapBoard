@@ -16,19 +16,58 @@
 		<p>
 			페이지 : 
 			<span class="badge text-bg-success" th:text="${page}"></span> /
-			<span class="badge text-bg-primary" th:text="${rowCount}"></span>
+			<span class="badge text-bg-primary" th:text="${users.totalElements}"></span>
 		</p>
-		<table class="table table-hover">
+		<table class="table table-hover" id="userTable">
 			<thead>
+			
 				<tr>
-					<th>아이디</th>
-					<th>이름</th>
-					<th>폰</th>
-					<th>이메일</th>
-					<th>나이</th>
-					<th>가입일</th>
+					<th>
+						<a class="orderLink bi" th:href="@{./1(sort=userId,,field=${param.field},search=${param.search})}" data-sort="userId">아이디</a>
+					</th>
+					<th>
+						<a class="orderLink bi" th:href="@{./1(sort=name,,field=${param.field},search=${param.search})}" data-sort="name">이름</a>
+					</th>
+					<th>
+						<a class="orderLink bi" th:href="@{./1(sort=phone,,field=${param.field},search=${param.search})}" data-sort="phone">폰번호</a>
+					</th>
+					<th>
+						<a class="orderLink bi" th:href="@{./1(sort=email,,field=${param.field},search=${param.search})}" data-sort="email">이메일</a>
+					</th>
+					<th>
+						<a class="orderLink bi" th:href="@{./1(sort=birth,,field=${param.field},search=${param.search})}" data-sort="birth">나이</a>
+					</th>
+					<th>
+						<a class="orderLink bi" th:href="@{./1(sort=signup,field=${param.field},search=${param.search})}" data-sort="signup">가입일</a>
+					</th>
 					<th>상세(수정)</th>
 				</tr>
+<script>
+const orderLinks=document.querySelectorAll(".orderLink");
+const paramSort="[[${param.sort}]]";
+const paramDirect="[[${param.direct}]]";
+if(!paramSort&&!paramDirect){
+	const link=orderLinks[0];	
+	link.href+="&direct=asc";
+	link.classList.add("bi-sort-down");
+}
+
+orderLinks.forEach((link)=>{
+	let href=link.href;
+	let sort=link.dataset.sort;
+	if(sort==paramSort){
+		if(!paramDirect || paramDirect=="desc"){
+			link.href=href+"&direct=asc";
+			link.classList.add("bi-sort-down");
+			link.classList.remove("bi-sort-down-alt");
+		}else{
+			link.classList.add("bi-sort-down-alt");
+			link.classList.remove("bi-sort-down");
+		}
+	}
+});
+</script>
+
 			</thead>
 			<tbody>
 				<tr th:each="user:${users}">
@@ -47,6 +86,16 @@
 				</tr>
 			</tbody>
 		</table>
+				<div class="d-flex justify-content-center" 
+			th:insert="/paging"
+			th:with="startPage=${(page-2<1)?1:page-2},
+					 endPage=${(page+2>users.totalPages)?users.totalPages:page+2},
+					 lastPage=${users.totalPages},
+					 hasNext=${users.hasNext},
+					 hasPrevious=${users.hasPrevious}"
+			>
+		</div>
+		
 	</main>
 </body>
 </html>

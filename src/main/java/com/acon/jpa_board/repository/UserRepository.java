@@ -1,10 +1,11 @@
 package com.acon.jpa_board.repository;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.acon.jpa_board.dto.User;
@@ -14,10 +15,16 @@ import com.acon.jpa_board.dto.User;
 // JpaRepository : crud용 함수가 명시되어 있다. findAll,findeById,delete,save(insert,update) 
 @Repository
 public interface UserRepository extends JpaRepository<User, String>{
-	List<User >findByName(String name); 
-	//Select * from User where name=:name
-	Optional<User> findOptionalByUserIdAndPw (String userId,String pw); 
-	//Select * from User where userId=:userId And pw=:pw 
-
+	Optional<User> findByUserIdAndPw (String userId,String pw); 
+	//Select u from User u where userId=:userId And pw=:pw 
+	
+	Page<User>findByNameContaining(String name, Pageable pagebale); 
+	//Select u from User u where name like %:name%
+	Page<User>findByUserIdContaining(String userId, Pageable pagebale); 
+	Page<User>findByEmailContaining(String email, Pageable pagebale); 
+	@Query(value = "select u from User u where CAST(u.birth as string) like %:birth%")
+	Page<User>findByBirthContaining(String birth, Pageable pagebale); 
+	@Query(value = "select u from User u where CAST(u.signup as string) like %:signup%")
+	Page<User>findBySignupContaining(String signup, Pageable pagebale); 
 
 }
