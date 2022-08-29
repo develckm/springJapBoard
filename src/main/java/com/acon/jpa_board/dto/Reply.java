@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
 
@@ -27,15 +30,6 @@ import lombok.Data;
 | boardNo  | int          | NO   | MUL | NULL              |                   |
 | userId   | varchar(255) | NO   | MUL | NULL              |                   |
 +-----------+--------------+------+-----+-------------------+-------------------+
- *BOARD_SPRING.REPLY_PREFER
-+-----------------+--------------+------+-----+---------+----------------+
-| Field           | Type         | Null | Key | Default | Extra          |
-+-----------------+--------------+------+-----+---------+----------------+
-| reply_prefer_no | int          | NO   | PRI | NULL    | auto_increment |
-| prefer          | tinyint(1)   | YES  |     | NULL    |                |
-| replyNo        | int          | NO   | MUL | NULL    |                |
-| userId         | varchar(255) | NO   | MUL | NULL    |                |
-+-----------------+--------------+------+-----+---------+----------------+
  * */
 @Entity
 @Data
@@ -57,6 +51,9 @@ public class Reply {
 	private int bad;
 	@Column(name = "board_no")
 	private int boardNo;
-	@Column(name = "user_id")
-	private String userId;   
+	@ManyToOne //유저1명이 게시글에 여러 댓글 작성
+	@JoinColumn(name = "user_id") //user_id는 등록 수정 되는 fk
+	private User user;
+	@Transient //사용하지 않는 필드 선언
+	ReplyPrefer lgoinPrefer;
 }

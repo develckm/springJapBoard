@@ -20,14 +20,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.acon.jpa_board.dto.Board;
+import com.acon.jpa_board.dto.BoardPrefer;
 import com.acon.jpa_board.dto.User;
+import com.acon.jpa_board.repository.BoardPreferRepostitory;
 import com.acon.jpa_board.repository.BoardRepository;
 @RequestMapping("/board")
 @Controller
 public class BoardController {
 	@Autowired
 	private BoardRepository boardRepository;
-	
+	@Autowired
+	private BoardPreferRepostitory boardPreferRepostitory;
+
 	@GetMapping("/list/{page}")
 	public String list(
 			@PathVariable int page,
@@ -77,10 +81,18 @@ public class BoardController {
 	@GetMapping("/detail/{boardNo}")
 	public String detail(
 			@PathVariable int boardNo,
+			@SessionAttribute(required = false) User loginUser,
 			Model model) {
 		Optional<Board> boardOpt=boardRepository.findById(boardNo);
 		if(boardOpt.isPresent()) {
 			model.addAttribute("board", boardOpt.get());
+			if(loginUser!=null) {				
+				Optional<BoardPrefer> preferOpt=boardPreferRepostitory.findByUserIdAndBoardNo(loginUser.getUserId(), boardNo);
+				//로그인한 유저가 해당 게시글에 좋아요를 했는지
+				if(preferOpt.isPresent()) {
+					model.addAttribute("boardPrefer", preferOpt.get());
+				}
+			}
 			return "/board/detail";
 		}else {
 			return "redirect:/board/list/1";
@@ -109,7 +121,7 @@ public class BoardController {
 	}
 	@GetMapping("update/{boardNo}")
 	public String update(
-			@SessionAttribute User loginUser,
+			@SessionAttribute(required = false) User loginUser,
 			@PathVariable int boardNo,
 			Model model) {
 		Optional<Board> boardOpt=boardRepository.findById(boardNo);
@@ -140,13 +152,35 @@ public class BoardController {
 
 		}
 	}
-
+	@GetMapping("/prefer/modify/{boardNo}/{prefer}")
+	public String preferModify(
+			BoardPrefer prefer,
+			@SessionAttribute User loginUser,
+			HttpSession session) {
+		prefer.setUserId(loginUser.getUserId());
+		Optional<BoardPrefer>  preferOpt=boardPreferRepostitory.findByUserIdAndBoardNo(prefer.getUserId(), prefer.getBoardNo());
+		String msg=(prefer.isPrefer())?"좋아요":"싫어요";
+		try {
+			if(preferOpt.isEmpty()) {
+				msg+=" 등록";
+				boardPreferRepostitory.save(prefer); //insert
+			}else {
+				if(prefer.isPrefer()==preferOpt.get().isPrefer()) {//delete
+					msg+=" 삭제";
+					boardPreferRepostitory.deleteById(preferOpt.get().getBoardPreferNo());
+				}else {
+					msg+=" 수정";
+					prefer.setBoardPreferNo(preferOpt.get().getBoardPreferNo());
+					boardPreferRepostitory.save(prefer); //update
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg+=" 실패(오류)";
+		}
+		msg+=" 성공";
+		session.setAttribute("msg", msg);
+		return "redirect:/board/detail/"+prefer.getBoardNo();
+	}
 }
-
-//
-//<if test="search != null">
-//	WHERE name LIKE CONCAT('%', #{search}, '%')
-//</if>
-
-
 

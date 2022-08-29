@@ -157,6 +157,14 @@ public class UserController {
 			return "redirect:/user/login.do";
 		}
 	}
+	@GetMapping("/logout.do")
+	public String logout(HttpSession session) {
+		//session.invalidate();
+		session.removeAttribute("loginUser");
+		return "redirect:/";
+	}
+	
+
 }
 
 

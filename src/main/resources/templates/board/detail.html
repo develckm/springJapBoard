@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>게시글 상세</title>
-<script th:src="@{/public/js/board/detail.js}" defer="defer" ></script>
+<script th:src="@{/public/js/board/detail.js}"defer="defer"></script>
 </head>
 <body>
 	<header th:insert="/headerNav"></header>
@@ -26,11 +26,15 @@
 		</p>
 		<div class="mb-3 d-flex justify-content-between">
 			<div>
-				<a class="btn btn-outline-primary rounded-pill bi bi-hand-thumbs-up" 
-					href="#" th:text="${board.good}"></a>				
+				<a 
+					th:classappend="${(boardPrefer!=null&&boardPrefer.prefer)?'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up'}"
+					class="btn btn-outline-primary rounded-pill bi " 
+					th:href="@{/board/prefer/modify/{no}/true(no=${board.boardNo})}" th:text="${board.good}"></a>				
 				/
-				<a class="btn btn-outline-danger rounded-pill bi bi-hand-thumbs-down" 
-					href="#" th:text="${board.bad}"></a>				
+				<a 
+					th:classappend="${(boardPrefer!=null&&!(boardPrefer.prefer))?'bi-hand-thumbs-down-fill':'bi-hand-thumbs-down'}"
+					class="btn btn-outline-danger rounded-pill bi" 
+					th:href="@{/board/prefer/modify/{no}/false(no=${board.boardNo})}" th:text="${board.bad}"></a>				
 				
 				/
 				<i class="bi bi-eye" 

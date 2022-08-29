@@ -34,16 +34,6 @@ import lombok.Data;
 | bad       | int          | NO   |     | 0                 |                   |
 | views     | int          | NO   |     | 0                 |                   |
 +-----------+--------------+------+-----+-------------------+-------------------+
-*BOARD_SPRING.BOARD_PREFER
-+-----------------+--------------+------+-----+---------+----------------+
-| Field           | Type         | Null | Key | Default | Extra          |
-+-----------------+--------------+------+-----+---------+----------------+
-| board_prefer_no | int          | NO   | PRI | NULL    | auto_increment |
-| boardNo        | int          | NO   | MUL | NULL    |                |
-| prefer          | tinyint(1)   | YES  |     | NULL    |                |
-| userId         | varchar(255) | NO   | MUL | NULL    |                |
-+-----------------+--------------+------+-----+---------+----------------+
-*
 */
 @Entity
 @Data

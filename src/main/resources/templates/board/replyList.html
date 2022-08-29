@@ -2,38 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<ul id="replyList" class="list-group">
 		<th:block th:each="reply:${board.replies}">
-			<li class="list-group-item">
-	 			<div class="ms-2 me-auto">
-			      <div>글쓴이 : <span th:text="${reply.userId}"></span>	</div>
-			      <div class="d-flex justify-content-between align-items-center">
-			      	<div>
-				      	등록일 : 
-				      	<span th:text="${#dates.format(reply.postTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-			      	</div>
-		      		<div>
-					    <a  
-					    	class="btn btn-sm btn-outline-primary rounded-pill bi bi-hand-thumbs-up" 
-					    	th:text="${reply.good}"
-					    	href="#">
-					    </a>
-					    <span>/</span> 
-				 		<a  
-					    	class="btn btn-sm btn-outline-danger rounded-pill bi bi-hand-thumbs-down" 
-					    	th:text="${reply.bad}" 
-					    	href="#">
-					    </a>
-					</div> 
-			      </div>
-			      <div class="fw-bold">
-			      	<span th:text="${reply.replyNo}"></span>.
-			      	<span th:text="${reply.title}"></span>
-			      </div>
-			      <div th:if="${reply.imgPath!=null}">
-			      	<img alt="댓글 이미지" class="img-thumbnail"  style="height:50px; width:100%; object-fit: cover;"
-			      	th:src="@{/public/img/{file}(file=${reply.imgPath})}">
-			      </div>
-			      <div th:text="${reply.contents}"></div>	
-			    </div>			
+			<li class="list-group-item" th:id="|replyLi${reply.replyNo}|">
+	 			<th:block th:insert="/board/replyDetail"></th:block>			
 		    </li>
 		</th:block>
 	</ul>
